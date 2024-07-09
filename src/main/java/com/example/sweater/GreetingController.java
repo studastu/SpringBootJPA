@@ -22,19 +22,12 @@ public class GreetingController {
     @Autowired
     private MessageRepo messageRepo;
 
-    @GetMapping("/greeting")
-    public String greeting(
-            @RequestParam(name="name", required=false, defaultValue="World") String name,
-            /*Model model //то,куда будет складывать файлы,кот-е хотим вернуть юзеру(html)*/
-            Map<String, Object> model
-    ) {
-        //model.addAttribute("name", name);
-        model.put("name", name);
+    @GetMapping("/")
+    public String greeting(Map<String, Object> model) {
         return "greeting";
     }
 
-    //GetMapping ниже будет работать сразу на localhost (а не localhost/greeting)
-    @GetMapping
+    @GetMapping("/main")
     public String main(Map<String, Object> model) {
         Iterable<Message> messages = messageRepo.findAll();
         model.put("messages", messages);
@@ -43,7 +36,7 @@ public class GreetingController {
 
     //Обработаем формы и поля
     //@RequestParam выдергивает значения из формочки (если post) или из адр строки (если get)
-    @PostMapping
+    @PostMapping("/main")
     public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
         Message message = new Message(text, tag);
         messageRepo.save(message);
